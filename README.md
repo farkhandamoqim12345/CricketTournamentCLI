@@ -26,18 +26,18 @@ CricketTournamentCLI/
 
 ## 🖥️ Option A — LocalDB (Normal .NET Run)
 
-> Yeh tab use karo jab Docker available nahi ho
+
 
 ### Step 1: Prerequisites
-- Visual Studio 2022 ya VS Code
+- Visual Studio 2022 or VS Code
 - .NET 8 SDK
-- SQL Server Express ya LocalDB (Visual Studio ke saath aata hai)
+- SQL Server Express or LocalDB (Visual Studio )
 
 ### Step 2: Database Setup
-1. Visual Studio mein **SQL Server Object Explorer** open karo
-2. `(localdb)\MSSQLLocalDB` pe right-click → **New Query**
-3. `init.sql` ka content paste karo aur **Execute** (F5) karo
-4. Check karo ke `CricketDB` database ban gaya
+1. Visual Studio  **SQL Server Object Explorer** open 
+2. `(localdb)\MSSQLLocalDB` right-click → **New Query**
+3. `init.sql`  paste and **Execute** (F5) 
+4. Check 
 
 ### Step 3: Run the App
 ```bash
@@ -46,46 +46,41 @@ dotnet run
 
 ---
 
-## 🐳 Option B — Docker (Sir ke liye)
+## 🐳 Option B — Docker 
 
-> Poora environment Docker mein chalega — SQL Server bhi, App bhi
+
 
 ### Step 1: Prerequisites
-- Docker Desktop install hona chahiye (Windows/Mac/Linux)
-- `docker-compose` available hona chahiye
+- Docker Desktop install  (Windows/Mac/Linux)
+- `docker-compose` available 
 
 ### Step 2: Files Copy Karo
-Yeh files project root mein rakho:
 - `Dockerfile`
 - `docker-compose.yml`
 - `init.sql` (already existing)
 
 ### Step 3: Run
 ```bash
-# Terminal mein project folder mein jao, phir:
+:
 docker-compose up --build
-```
 
-Pehli baar thoda time lagega (SQL Server image download hogi ~500MB).
 
-### Step 4: App Use Karo
+### Step 4: App Use 
 ```bash
-# Dusre terminal mein:
+
 docker attach cricket_app
 ```
 
 ### Useful Commands
 ```bash
-# Stop karna
+
 docker-compose down
 
-# Sab kuch reset (database bhi)
 docker-compose down -v
 
-# Logs dekhna
+
 docker-compose logs -f
 
-# SQL Server se directly connect karna (optional)
 # Server: localhost,1433
 # User: sa
 # Password: Cricket@123
