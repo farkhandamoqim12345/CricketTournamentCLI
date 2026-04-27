@@ -1,0 +1,79 @@
+# =============================================
+# Cricket Tournament CLI - Docker Compose
+# =============================================
+# Yeh file 2 cheezein ek saath chalayegi:
+#   1. SQL Server (sqlserver service)
+#   2. Cricket App (cricketapp service)
+# =============================================
+
+version: '3.8'
+
+services:
+
+  # ─── SQL Server ───────────────────────────
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: cricket_sqlserver
+    environment:
+      SA_PASSWORD: "Cricket@123"        # SQL Server ka password
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Express"              # Free Express edition
+    ports:
+      - "1433:1433"                     # Local machine pe bhi access ho sake
+    volumes:
+      - sqldata:/var/opt/mssql          # Data permanently save hoga
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Cricket@123 -Q 'SELECT 1' -No -C || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  # ─── Database Initialization ──────────────
+  db-init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: cricket_db_init
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    volumes:
+      - ./init.sql:/init.sql            # init.sql file mount karo
+    command: >
+      bash -c "
+        echo 'Waiting for SQL Server to start...' &&
+        sleep 10 &&
+        /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P Cricket@123 -i /init.sql -No -C &&
+        echo 'Database initialized successfully!'
+      "
+    restart: "no"
+
+  # ─── Cricket App ──────────────────────────
+  cricketapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cricket_app
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      # Yeh environment variable Program.cs mein check hoga
+      DB_SERVER: "sqlserver"
+      DB_PASSWORD: "Cricket@123"
+      USE_DOCKER: "true"
+    stdin_open: true                    # CLI input ke liye zaroori!
+    tty: true                           # Terminal colors ke liye zaroori!
+    restart: unless-stopped
+
+# ─── Volumes ──────────────────────────────
+volumes:
+  sqldata:
+    driver: local
+
+# =============================================
+# COMMANDS:
+#   Start:   docker-compose up --build
+#   Stop:    docker-compose down
+#   Logs:    docker-compose logs -f
+#   App:     docker attach cricket_app
+# =============================================
