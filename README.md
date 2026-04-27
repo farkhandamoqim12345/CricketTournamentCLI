@@ -22,7 +22,56 @@ CricketTournamentCLI/
 ├── init.sql                   # Database Schema & Seed Data
 ├── Dockerfile                 # App Containerization
 └── docker-compose.yml         # Multi-container orchestration
-🚀 Quick Start (Docker - Recommended)Use this method to run the entire environment (App + SQL Server) without installing anything locally.1. PrerequisitesDocker Desktop installed and running.2. Run the AppNavigate to the project root in your terminal and run:Bashdocker-compose up --build
-Note: The first run might take a few minutes to download the SQL Server image (~500MB).3. Attach to InterfaceOnce the containers are up, open a new terminal and run:Bashdocker attach cricket_app
-🖥️ Local Setup (Normal .NET Run)1. Prerequisites.NET 8 SDKSQL Server Express or LocalDB2. Database SetupOpen SQL Server Object Explorer in Visual Studio.Right-click on (localdb)\MSSQLLocalDB → New Query.Paste the content of init.sql and press Execute (F5).Verify CricketDB is created.3. ExecutionBashdotnet run
-✨ Key Features🔍 Advanced Search: Find players instantly by name.🏆 Tournament Summary: Comprehensive dashboard for match stats.🔒 Secure Auth: Parameterized SQL queries and password masking (***).🔁 Resilient Design: Auto-retry logic for database connectivity.🐳 Dockerized: Seamless deployment with managed SQL environment.🔐 CredentialsRoleUsernamePasswordAdminadminadmin123GuestNo login required—🛠️ Useful Docker CommandsCommandDescriptiondocker-compose downStop servicesdocker-compose down -vReset everything (Deletes DB data)docker-compose logs -fView real-time logs❗ TroubleshootingUnicode Issues: If emojis/symbols don't show in Windows CMD, run chcp 65001.Connection Errors: If using Docker, the app might retry while SQL Server starts. This is normal; just wait for the "Retry 5/5" to complete.
+
+
+🚀 Quick Start (Docker - Recommended)
+Use this method to run the entire environment (App + SQL Server) without installing anything locally.
+
+1. Prerequisites
+Docker Desktop installed and running.
+
+2. Run the App
+Navigate to the project root in your terminal and run:
+
+Bash
+docker-compose up --build
+
+
+Note: The first run might take a few minutes to download the SQL Server image.
+
+3. Attach to Interface
+Once the containers are up, open a new terminal and run:
+
+Bash
+docker attach cricket_app
+
+🖥️ Local Setup (Normal .NET Run)
+1. Prerequisites
+.NET 8 SDK
+
+SQL Server Express or LocalDB
+
+2. Database Setup
+Open SQL Server Object Explorer in Visual Studio.
+
+Right-click on (localdb)\MSSQLLocalDB → New Query.
+
+Paste the content of init.sql and press Execute (F5).
+
+3. Execution
+Bash
+dotnet run
+
+✨ New Features
+
+🔍 Search Player: Find players by name (Player Management → Option 6).
+🏆 Tournament Summary: New dashboard for stats (Admin → Option 9).
+🔒 Password Masking: Admin login now hides characters with *.
+🔁 Auto-Retry: App will retry DB connection 5 times if SQL is slow to start.
+🔐 CredentialsRoleUsernamePasswordAdminadminadmin123GuestNo login required—🛠️
+ Useful Commands
+TaskCommandStop Dockerdocker-compose downReset Everythingdocker-compose down -vView Logsdocker-compose logs -fFix Emojis (Win)chcp 65001
+
+
+
+
